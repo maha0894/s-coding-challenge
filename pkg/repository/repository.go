@@ -1,17 +1,16 @@
 package repository
 
 import (
-	"context"
 	"encoding/json"
-	"errors"
 	"os"
 
 	"github.com/maha0894/s-coding-challenge/pkg/entities"
 )
 
 var (
-	usersDB   = make(map[int]entities.User)
-	actionsDB = make(map[int][]entities.Action)
+	usersDB       = make(map[int]entities.User)
+	userActionsDB = make(map[int][]entities.Action)
+	actionsDB     []entities.Action
 )
 
 // Repository implementation
@@ -43,23 +42,14 @@ func initialise() error {
 	if err != nil {
 		return err
 	}
-	var actions []entities.Action
-	err = json.Unmarshal(buf1, &actions)
+	err = json.Unmarshal(buf1, &actionsDB)
 	if err != nil {
 		return err
 	}
 
-	for _, a := range actions {
-		actionsDB[a.UserID] = append(actionsDB[a.UserID], a)
+	for _, a := range actionsDB {
+		userActionsDB[a.UserID] = append(userActionsDB[a.UserID], a)
 	}
 
 	return err
-}
-
-func (*Repository) FetchUserInfo(ctx context.Context, id int) (entities.User, error) {
-	user, ok := usersDB[id]
-	if !ok {
-		return entities.User{}, errors.New("user not found")
-	}
-	return user, nil
 }

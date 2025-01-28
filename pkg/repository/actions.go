@@ -15,3 +15,19 @@ func (*Repository) FetchUserActionsCount(ctx context.Context, userId int) (entit
 	}
 	return entities.Actions{Count: len(actions)}, nil
 }
+
+// FetchReferralIndex calculates and returns ReferralIndex
+func (*Repository) FetchReferralIndex(ctx context.Context) (map[int]int, error) {
+	res := make(map[int]int)
+	referrers := make(map[int][]int)
+	for _, a := range actionsDB {
+		if a.Type == "REFER_USER" {
+			res[a.UserID]++
+			referrers[a.TargetUser] = append(referrers[a.TargetUser], a.UserID)
+			for _, referrer := range referrers[a.UserID] {
+				res[referrer]++
+			}
+		}
+	}
+	return res, nil
+}

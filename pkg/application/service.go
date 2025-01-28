@@ -15,6 +15,7 @@ type Service struct {
 type Repository interface {
 	FetchUserInfo(ctx context.Context, id int) (entities.User, error)
 	FetchUserActionsCount(ctx context.Context, userId int) (entities.Actions, error)
+	FetchReferralIndex(ctx context.Context) (map[int]int, error)
 }
 
 // NewService creates new service
@@ -30,4 +31,9 @@ func (s *Service) FetchUserInfo(ctx context.Context, id int) (entities.User, err
 // FetchUserActionsCount returns user actions count from the database
 func (s *Service) FetchUserActionsCount(ctx context.Context, userId int) (entities.Actions, error) {
 	return s.repository.FetchUserActionsCount(ctx, userId)
+}
+
+// FetchReferralIndex returns all users ReferralIndexes
+func (s *Service) FetchReferralIndex(ctx context.Context) (map[int]int, error) {
+	return s.repository.FetchReferralIndex(ctx)
 }
