@@ -24,9 +24,11 @@ func (*Repository) FetchReferralIndex(ctx context.Context) (map[int]int, error) 
 		if a.Type == "REFER_USER" {
 			res[a.UserID]++
 			referrers[a.TargetUser] = append(referrers[a.TargetUser], a.UserID)
+			referrers[a.TargetUser] = append(referrers[a.TargetUser], referrers[a.UserID]...)
 			for _, referrer := range referrers[a.UserID] {
 				res[referrer]++
 			}
+			res[a.TargetUser] = 0
 		}
 	}
 	return res, nil
