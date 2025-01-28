@@ -33,7 +33,10 @@ func runServer() {
 	signal.Notify(signals, os.Interrupt, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT)
 
 	router := mux.NewRouter()
-	repo := repository.New()
+	repo, err := repository.New()
+	if err != nil {
+		log.Fatalf("Failed to initialise repository: %v", err)
+	}
 	service := application.NewService(repo)
 	handler := transport.NewUserHandler(service)
 	handler.RegisterRoutes(router)
