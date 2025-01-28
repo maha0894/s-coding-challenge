@@ -38,8 +38,10 @@ func runServer() {
 		log.Fatalf("Failed to initialise repository: %v", err)
 	}
 	service := application.NewService(repo)
-	handler := transport.NewUserHandler(service)
-	handler.RegisterRoutes(router)
+	userHandler := transport.NewUserHandler(service)
+	userHandler.RegisterRoutes(router)
+	actionsHandler := transport.NewActionsHandler(service)
+	actionsHandler.RegisterRoutes(router)
 
 	httpServer := &http.Server{
 		Addr:    fmt.Sprintf(":%d", 8000),

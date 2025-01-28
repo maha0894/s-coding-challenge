@@ -3,6 +3,8 @@ package repository
 import (
 	"context"
 	"errors"
+	"math"
+	"sort"
 
 	"github.com/maha0894/s-coding-challenge/pkg/entities"
 )
@@ -34,6 +36,26 @@ func (*Repository) FetchReferralIndex(ctx context.Context) (map[int]int, error) 
 		for _, ref := range refs {
 			res[ref] += res[uid]
 		}
+	}
+	return res, nil
+}
+
+// FetchNextActions calculates and returns next possible actions
+func (*Repository) FetchNextActions(ctx context.Context, action string) (map[string]float64, error) {
+	res := make(map[string]float64)
+	count := make(map[string]float64)
+	var total float64
+	for _, actions := range userActionsDB {
+		sort.Slice(actions, func(i, j int) bool { return actions[i].CreatedAt.Before(actions[j].CreatedAt) })
+		for i := range actions {
+			if actions[i].Type == action && i < len(actions)-1 {
+				count[actions[i+1].Type]++
+				total++
+			}
+		}
+	}
+	for a, counts := range count {
+		res[a] = math.Round(counts/total*100) / 100
 	}
 	return res, nil
 }

@@ -12,18 +12,19 @@ import (
 
 // UserHandler handles user related HTTP requests
 type UserHandler struct {
-	service UserService
+	service Service
 }
 
-// UserService ...
-type UserService interface {
+// Service ...
+type Service interface {
 	FetchUserInfo(ctx context.Context, id int) (entities.User, error)
 	FetchUserActionsCount(ctx context.Context, userId int) (entities.Actions, error)
 	FetchReferralIndex(ctx context.Context) (map[int]int, error)
+	FetchNextActions(ctx context.Context, action string) (map[string]float64, error)
 }
 
 // NewUserHandler creates a new user HTTP handler
-func NewUserHandler(s UserService) *UserHandler {
+func NewUserHandler(s Service) *UserHandler {
 	return &UserHandler{service: s}
 }
 

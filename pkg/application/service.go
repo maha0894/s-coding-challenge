@@ -16,6 +16,7 @@ type Repository interface {
 	FetchUserInfo(ctx context.Context, id int) (entities.User, error)
 	FetchUserActionsCount(ctx context.Context, userId int) (entities.Actions, error)
 	FetchReferralIndex(ctx context.Context) (map[int]int, error)
+	FetchNextActions(ctx context.Context, action string) (map[string]float64, error)
 }
 
 // NewService creates new service
@@ -36,4 +37,9 @@ func (s *Service) FetchUserActionsCount(ctx context.Context, userId int) (entiti
 // FetchReferralIndex returns all users ReferralIndexes
 func (s *Service) FetchReferralIndex(ctx context.Context) (map[int]int, error) {
 	return s.repository.FetchReferralIndex(ctx)
+}
+
+// FetchNextActions calculates and returns next possible actions
+func (s *Service) FetchNextActions(ctx context.Context, action string) (map[string]float64, error) {
+	return s.repository.FetchNextActions(ctx, action)
 }
