@@ -14,6 +14,7 @@ type Service struct {
 // Repository is a data repository
 type Repository interface {
 	FetchUserInfo(ctx context.Context, id int) (entities.User, error)
+	FetchUserActionsCount(ctx context.Context, userId int) (entities.Actions, error)
 }
 
 // NewService creates new service
@@ -21,7 +22,12 @@ func NewService(r Repository) *Service {
 	return &Service{repository: r}
 }
 
-// FetchUserInfo returns user info from the database.
+// FetchUserInfo returns user info from the database
 func (s *Service) FetchUserInfo(ctx context.Context, id int) (entities.User, error) {
 	return s.repository.FetchUserInfo(ctx, id)
+}
+
+// FetchUserActionsCount returns user actions count from the database
+func (s *Service) FetchUserActionsCount(ctx context.Context, userId int) (entities.Actions, error) {
+	return s.repository.FetchUserActionsCount(ctx, userId)
 }

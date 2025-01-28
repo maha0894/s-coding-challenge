@@ -9,3 +9,7 @@ type Action struct {
 	TargetUser int       `json:"targetUser"` // Supplied when "REFER_USER" action type
 	CreatedAt  time.Time `json:"createdAt"`
 }
+
+type Actions struct {
+	Count int `json:"count"`
+}
